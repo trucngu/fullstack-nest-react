@@ -1,11 +1,11 @@
-import { IoPieChart } from 'react-icons/io5'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Input } from 'antd'
+import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 import { routes } from '../../constants/routes'
 import * as themes from '../../constants/themes'
 import { MenuItem } from './menu-item'
 
-const LayoutContainer = styled.div`
+const LayoutWrapper = styled.div`
     display: flex;
     width: 100vw;
     height: 100vh;
@@ -18,7 +18,7 @@ const SideNav = styled.nav`
     display: flex;
     flex-direction: column;
     background-color: ${themes.COLOR_LEVEL_1};
-    color: ${themes.TEXT_COLOR};
+    color: ${themes.COLOR_TEXT};
 `
 
 const Brand = styled.div`
@@ -32,14 +32,37 @@ const SideNavMenu = styled.nav`
     flex-direction: column;
 `
 
-const MainContent = styled.main`
+const Content = styled.main`
+    width: 100%;
     display: flex;
     flex-direction: column;
+    
 `
 
+const TopNav = styled.div`
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    width: 100%;
+    height: 60px;
+    background-color: ${themes.COLOR_TOP_NAV};
+    border-bottom: 1px solid ${themes.BORDER_COLOR};
+`
+
+const OutletWrapper = styled.div`
+    padding: 15px;
+`
+
+const { Search } = Input
+
 export const Layout = () => {
+
+    const onSearch = (value: string) => {
+        console.log(value)
+    }
+
     return (
-        <LayoutContainer>
+        <LayoutWrapper>
             <SideNav>
                 <Brand>SpaceSales</Brand>
                 <SideNavMenu>
@@ -50,10 +73,15 @@ export const Layout = () => {
                     })}
                 </SideNavMenu>
             </SideNav>
-            <MainContent>
-                <Outlet />
-            </MainContent>
-        </LayoutContainer >
+            <Content>
+                <TopNav>
+                    <Search placeholder="input search text" onSearch={onSearch} style={{ width: 300 }} />
+                </TopNav>
+                <OutletWrapper>
+                    <Outlet />
+                </OutletWrapper>
+            </Content>
+        </LayoutWrapper >
     )
 }
 

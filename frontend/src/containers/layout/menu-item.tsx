@@ -12,7 +12,7 @@ const Container = styled.div`
 `
 
 const Header = styled.div`
-    color: ${themes.TEXT_COLOR};
+    color: ${themes.COLOR_TEXT};
     padding: 8px 15px;
     width: 100%;
     display: flex;
@@ -31,16 +31,15 @@ const Header = styled.div`
 
 const NavItem = styled(NavLink)`
     width: 100%;
-    color: ${themes.TEXT_COLOR};
+    color: ${themes.COLOR_TEXT};
     display: flex;
     align-items: center;
     gap: 5px;
     padding: 10px 15px;
-    border-radius: 8px;
 
     :hover,
     &.active {
-        color: ${themes.TEXT_COLOR};
+        color: ${themes.COLOR_TEXT};
         background-color: ${themes.COLOR_LEVEL_3};
     }
 `
@@ -55,7 +54,7 @@ const Body = styled.div<{
     flex-direction: column;
     transition: all 0.5s ease-in-out;
     padding: 0 ${props => props.isOpen ? '15px' : '0'};
-    color: ${themes.TEXT_COLOR};
+    color: ${themes.COLOR_TEXT};
 `
 
 interface MenuItemProps extends Route {

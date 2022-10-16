@@ -1,4 +1,6 @@
 export const COLOR_LEVEL_1 = '#1d4ed8'
 export const COLOR_LEVEL_2 = '#2563eb'
 export const COLOR_LEVEL_3 = '#3b82f6'
-export const TEXT_COLOR = '#FFFFFF'
+export const COLOR_TEXT = '#FFFFFF'
+export const COLOR_TOP_NAV = '#f1f5f9'
+export const BORDER_COLOR = '#cbd5e1'

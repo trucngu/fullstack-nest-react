@@ -12,9 +12,10 @@ import { UsersController } from './controllers/users.controller'
         UsersService
     ],
     exports: [
-        TypeOrmModule,
         UsersService,
     ],
-    controllers: [UsersController]
+    controllers: [
+        UsersController,
+    ]
 })
 export class UsersModule { }

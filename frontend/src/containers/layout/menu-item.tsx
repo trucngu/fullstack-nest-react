@@ -3,7 +3,7 @@ import { Route } from '../../constants/routes'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import * as themes from '../../constants/themes'
-import { IoChevronDown, IoChevronForward } from 'react-icons/io5'
+import { IoChevronDown, IoChevronForward, IoRemoveOutline } from 'react-icons/io5'
 
 const Container = styled.div`
     -webkit-user-select: none; /* Safari */
@@ -103,6 +103,6 @@ export const MenuItem: FC<MenuItemProps> = ({
     }
 
     return (
-        <NavItem to={path}>{icon && icon}{title}</NavItem>
+        <NavItem to={path}>{icon && icon}{!icon && <IoRemoveOutline />}{title}</NavItem>
     )
 }

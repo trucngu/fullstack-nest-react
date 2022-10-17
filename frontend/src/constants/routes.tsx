@@ -1,10 +1,13 @@
 import { ReactNode } from 'react'
-import { IoPeople, IoPieChart, IoSubway } from 'react-icons/io5'
+import { IoAppsOutline, IoAtSharp, IoBagCheckOutline, IoInvertMode, IoPeople, IoPieChart, IoSubway } from 'react-icons/io5'
 import { CRM } from '../containers/crm'
 import { Dashboard } from '../containers/dashboard'
 import { Invoices } from '../containers/invoices'
 import { Orders } from '../containers/orders'
+import { Reports } from '../containers/orders/reports'
 import { Products } from '../containers/products'
+import { AutomationFlow } from '../containers/products/automation-flow'
+import { Categories } from '../containers/products/categories'
 
 export interface Route {
     title: string
@@ -22,15 +25,35 @@ export const routes: Route[] = [
         element: <Dashboard />
     },
     {
-        title: 'Sales',
-        path: '/sales',
-        icon: < IoSubway />,
+        title: 'Inventory',
+        path: '/inventory',
+        icon: <IoSubway />,
         routes: [
+            {
+                title: 'Category',
+                path: 'categories',
+                element: <Categories />,
+                icon: <IoAppsOutline />
+            },
             {
                 title: 'Products',
                 path: 'products',
-                element: <Products />
+                element: <Products />,
+                icon: <IoAtSharp />
             },
+            {
+                title: 'Automation',
+                path: 'automation',
+                element: <AutomationFlow />,
+                icon: <IoBagCheckOutline />
+            },
+        ]
+    },
+    {
+        title: 'Sales',
+        path: '/sales',
+        icon: < IoInvertMode />,
+        routes: [
             {
                 title: 'Orders',
                 path: 'orders',
@@ -40,6 +63,11 @@ export const routes: Route[] = [
                 title: 'Invoices',
                 path: 'invoices',
                 element: <Invoices />
+            },
+            {
+                title: 'Reports',
+                path: 'reports',
+                element: <Reports />
             },
         ]
     },

@@ -15,9 +15,7 @@ export class PurchaseOrderService {
 
     @InjectRepository(Supplier)
     private supplierRepository: Repository<Supplier>
-  ) {
-
-  }
+  ) { }
 
   async create(dto: CreatePurchaseOrderDto) {
 
@@ -64,7 +62,12 @@ export class PurchaseOrderService {
     await this.purchaseOrderRepository.update(id, po)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} purchaseOrder`
+  async remove(id: number) {
+    const po = await this.findOne(id)
+    if (!po) {
+      throw new NotFoundException()
+    }
+
+    await this.purchaseOrderRepository.remove(po)
   }
 }

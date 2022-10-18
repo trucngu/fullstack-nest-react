@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { CategoryDto } from '../dtos/category.dto'
-import { ProductDto } from '../dtos/product.dto'
+import { CategoryDto } from '../dto/category.dto'
 import { Category } from '../enties/category.entity'
 
 @Injectable()
@@ -29,5 +28,17 @@ export class CategoryService {
             isActive: true
         })
         return result
+    }
+
+    async update(id: number, dto: CategoryDto) {
+        await this.cateogryRepository.update(id, {
+            name: dto.name
+        })
+    }
+
+    async deactive(id: number) {
+        await this.cateogryRepository.update(id, {
+            isActive: false
+        })
     }
 }

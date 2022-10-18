@@ -1,4 +1,4 @@
-export interface RegisterDto {
+export class RegisterDto {
     username: string
     password: string
 }

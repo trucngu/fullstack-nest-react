@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
-import { CategoryDto } from '../dtos/category.dto'
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
+import { CategoryDto } from '../dto/category.dto'
 import { CategoryService } from '../services/category.service'
 
 @Controller('categories')
@@ -18,7 +18,17 @@ export class CategoriesController {
     }
 
     @Post()
-    create(@Body() req: CategoryDto) {
-        return this.categoryService.create(req)
+    create(@Body() categoryDto: CategoryDto) {
+        return this.categoryService.create(categoryDto)
+    }
+
+    @Put(':id')
+    update(@Param('id') id: number, @Body() categoryDto: CategoryDto) {
+        return this.categoryService.update(id, categoryDto)
+    }
+
+    @Put(':id/deactivate')
+    deactivate(@Param('id') id: number) {
+        return this.categoryService.deactive(id)
     }
 }

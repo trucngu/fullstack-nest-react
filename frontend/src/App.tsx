@@ -4,27 +4,38 @@ import {
   Routes,
   Route,
 } from "react-router-dom"
-import { Dashboard } from './containers/dashboard'
-import { Products } from './containers/products'
 import { Login } from './containers/login'
 import { Layout } from './containers/layout'
-import { Orders } from './containers/orders'
-import { Invoices } from './containers/invoices'
-import { CRM } from './containers/crm'
 import { PageNotFound } from './containers/page-not-found'
+import { RouteModel, routes } from './constants/routes'
+import { ProtectedRoute } from './components/protected-route'
+
+const render = (r: RouteModel) => {
+  if (!r.routes || r.routes.length === 0) {
+    return <Route path={r.path} element={r.element} />
+  }
+
+  return (
+    <Route path={r.path}>
+      {r.routes.map((r, k) => {
+        return render(r)
+      })}
+    </Route>
+  )
+}
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index path='dashboard' element={<Dashboard />} />
-          <Route path='sales'>
-            <Route path='products' element={<Products />} />
-            <Route path='orders' element={<Orders />} />
-            <Route path='invoices' element={<Invoices />} />
-          </Route>
-          <Route path='crm' element={<CRM />} />
+        <Route path="/" element={(
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        )}>
+          {routes.map((r, k) => {
+            return render(r)
+          })}
           <Route path='*' element={<PageNotFound />} />
         </Route>
         <Route path='login' element={<Login />} />

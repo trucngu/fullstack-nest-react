@@ -1,7 +1,7 @@
 import { login } from './auth'
 import { getProducts } from './product'
 
-const api = {
+const apiClient = {
     //Auth
     login,
 
@@ -9,4 +9,4 @@ const api = {
     getProducts
 }
 
-export default api
+export default apiClient

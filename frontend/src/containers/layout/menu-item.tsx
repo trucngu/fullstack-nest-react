@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useEffect, useState } from 'react'
-import { Route } from '../../constants/routes'
+import { RouteModel } from '../../constants/routes'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import * as themes from '../../constants/themes'
@@ -57,7 +57,7 @@ const Body = styled.div<{
     color: ${themes.COLOR_TEXT};
 `
 
-interface MenuItemProps extends Route {
+interface MenuItemProps extends RouteModel {
 }
 export const MenuItem: FC<MenuItemProps> = ({
     title,

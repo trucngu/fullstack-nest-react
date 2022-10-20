@@ -9,15 +9,15 @@ import { Products } from '../containers/products'
 import { AutomationFlow } from '../containers/products/automation-flow'
 import { Categories } from '../containers/products/categories'
 
-export interface Route {
+export interface RouteModel {
     title: string
     path: string
-    icon?: ReactNode,
-    routes?: Route[],
+    icon?: ReactNode
+    routes?: RouteModel[]
     element?: ReactNode
 }
 
-export const routes: Route[] = [
+export const routes: RouteModel[] = [
     {
         title: 'Dashboard',
         path: '/dashboard',

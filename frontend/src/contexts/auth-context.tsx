@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useState } from 'react'
-import apiClient from '../api'
+import api from '../api'
 
 interface User {
     token: string
@@ -24,10 +24,11 @@ export const AuthProvider: FC<Props> = ({
     const [user, setUser] = useState<User>(null!)
 
     const login = async (username: string, password: string) => {
-        const result = await apiClient.login(username, password)
+        const { accessToken } = await api.login(username, password)
+
         setUser({
-            token: result.accessToken,
-            name: 'Dont know'
+            token: accessToken,
+            name: username
         })
     }
 

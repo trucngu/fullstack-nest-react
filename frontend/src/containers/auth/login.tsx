@@ -1,7 +1,8 @@
-import { Button, Divider, Input } from 'antd'
-import React, { FC, useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
-import { useAuth } from '../hooks/use-auth'
+import { Button, Divider, Input } from 'antd'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../hooks/use-auth'
 
 const Container = styled.div`
     display: flex;
@@ -29,9 +30,13 @@ export const Login = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const auth = useAuth()
+    const location = useLocation()
+    const navigate = useNavigate()
+    const from = location.state?.from?.pathname || '/dashboard'
 
     const handleSignIn = async () => {
         await auth.login(username, password)
+        navigate(from, { replace: true })
     }
 
     return (

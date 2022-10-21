@@ -1,7 +1,7 @@
-import { api } from './api-client'
+import { httpClient } from '../client/api-client'
 
 export const getProducts = async () => {
-    const res = await api.get('/products')
+    const res = await httpClient.get('/products')
     if (res.status == 200) {
         return res.data
     }

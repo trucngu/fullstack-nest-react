@@ -1,7 +1,7 @@
 import { Button, Modal, Table } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import apiClient from '../../api'
+import api from '../../api'
 
 const Container = styled.div`
     display: flex;
@@ -50,9 +50,9 @@ export const Products = () => {
     }, [])
 
     const initialize = async () => {
-        const result = await apiClient.login('truc', 'Password1!')
+        const result = await api.login('truc', 'Password1!')
         console.log(result?.accessToken)
-        const products = await apiClient.getProducts()
+        const products = await api.getProducts()
         console.log(products)
     }
 

@@ -1,5 +1,6 @@
 import { createContext, FC, ReactNode, useState } from 'react'
 import api from '../api'
+import constants from '../constants'
 
 interface User {
     token: string
@@ -25,15 +26,21 @@ export const AuthProvider: FC<Props> = ({
 
     const login = async (username: string, password: string) => {
         const { accessToken } = await api.login(username, password)
-
-        setUser({
-            token: accessToken,
-            name: username
-        })
+        if (accessToken) {
+            setAccessToken(accessToken)
+            setUser({
+                token: accessToken,
+                name: username
+            })
+        }
     }
 
     const logout = () => {
         setUser(null!)
+    }
+
+    const setAccessToken = (jwt: string) => {
+        localStorage.setItem(constants.jwt, jwt)
     }
 
     return (

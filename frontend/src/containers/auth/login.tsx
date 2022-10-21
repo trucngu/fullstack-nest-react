@@ -1,19 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
-import { Button, Checkbox, Divider, Input } from 'antd'
+import { Button, Input } from 'antd'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/use-auth'
-import { FlexRow } from '../../components/flex-row'
 
 const Container = styled.div`
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: #f7f7f7da;
+    padding: 15rem;
+    border-radius: 10px;
 `
 
 const Brand = styled.div`
     font-size: 20pt;
     text-align: center;
     padding: 2rem;
+    font-weight: bolder;
 `
 
 const Body = styled.div`
@@ -26,46 +31,36 @@ const Body = styled.div`
     gap: 10px;
 `
 
-
+type Login = {
+    username: string,
+    password: string
+}
 
 export const Login = () => {
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [rememberMe, setRememberMe] = useState(false)
-
+    const [credential, setCredential] = useState<Login>()
     const auth = useAuth()
     const location = useLocation()
     const navigate = useNavigate()
     const from = location.state?.from?.pathname || '/dashboard'
 
-    useEffect(() => {
-        const loginJson = localStorage.getItem('remember_me')
-        if (loginJson) {
-            const login = JSON.parse(loginJson)
-            setUsername(login.username)
-            setPassword(login.password)
-            setRememberMe(login.rememberMe)
-        }
-    }, [])
-
     const handleSignIn = async () => {
-        await auth.login(username, password)
-        if (rememberMe) {
-            localStorage.setItem('remember_me', JSON.stringify({ username, password, rememberMe }))
-        }
+        await auth.login(credential!.username, credential!.password)
         navigate(from, { replace: true })
+    }
+
+    const handleChange = (e: any) => {
+        setCredential({ ...credential!, [e.target.name]: e.target.value })
     }
 
     return (
         <Container>
-            <Brand>Sign in</Brand>
+            <Brand>Spacesales</Brand>
             <Body>
-                <Input value={username} onChange={e => setUsername(e.target.value)} size="large" placeholder='Username' />
-                <Input value={password} onChange={e => setPassword(e.target.value)} size="large" placeholder='Password' type='password' />
-                <FlexRow><Checkbox checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} id="check" /> <label htmlFor='check'>Remember me ?</label></FlexRow>
-                <Button size="large" type="primary" onClick={handleSignIn} block={true}>Login</Button>
-                <Button size="large" block>Register</Button>
+                <Input name='username' value={credential?.username} onChange={handleChange} placeholder='Username' />
+                <Input name='password' value={credential?.password} onChange={handleChange} placeholder='Password' type='password' />
+                <Button type="primary" onClick={handleSignIn} block={true}>Login</Button>
+                <Button block>Register</Button>
             </Body>
         </Container>
     )

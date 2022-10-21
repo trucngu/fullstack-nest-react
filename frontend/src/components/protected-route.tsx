@@ -12,7 +12,7 @@ export const ProtectedRoute: FC<Props> = ({
     const auth = useAuth()
     const location = useLocation()
 
-    if (!auth.user) {
+    if (!auth?.user?.token) {
         return <Navigate to="login" state={{ from: location }} replace />
     }
 

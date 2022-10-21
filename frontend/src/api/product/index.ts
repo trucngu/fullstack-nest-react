@@ -1,4 +1,4 @@
-import { httpClient } from '../client/api-client'
+import httpClient from '../client/api-client'
 
 export const getProducts = async () => {
     const res = await httpClient.get('/products')

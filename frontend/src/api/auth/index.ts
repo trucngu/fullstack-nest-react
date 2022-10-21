@@ -1,4 +1,4 @@
-import { httpClient } from '../client/api-client'
+import httpClient from '../client/api-client'
 import { LoginResult } from './login-result'
 
 export const login = async (username: string, password: string) => {
@@ -6,13 +6,10 @@ export const login = async (username: string, password: string) => {
         username,
         password
     })
-    httpClient.defaults.headers.common = {
-        'Authorization': `Bearer ${res.data.accessToken}`
-    }
     return res.data
 }
 
 export const getProfile = async () => {
-    const res = await httpClient.get('/profile')
+    const res = await httpClient.get('/auth/profile')
     return res.data
 }

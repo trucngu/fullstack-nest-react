@@ -1,6 +1,7 @@
-import { createContext, FC, ReactNode, useState } from 'react'
+import { createContext, FC, ReactNode, useEffect, useState } from 'react'
 import api from '../api'
 import constants from '../constants'
+import jwtDecode from 'jwt-decode'
 
 interface User {
     token: string
@@ -24,10 +25,19 @@ export const AuthProvider: FC<Props> = ({
 }) => {
     const [user, setUser] = useState<User>(null!)
 
+    useEffect(() => {
+        (async () => {
+            const profile = await api.getProfile()
+            console.log(profile)
+        })()
+    }, [])
+
     const login = async (username: string, password: string) => {
         const { accessToken } = await api.login(username, password)
         if (accessToken) {
-            setAccessToken(accessToken)
+            localStorage.setItem(constants.jwt, accessToken)
+            const profile = await api.getProfile()
+            console.log(profile)
             setUser({
                 token: accessToken,
                 name: username
@@ -37,10 +47,6 @@ export const AuthProvider: FC<Props> = ({
 
     const logout = () => {
         setUser(null!)
-    }
-
-    const setAccessToken = (jwt: string) => {
-        localStorage.setItem(constants.jwt, jwt)
     }
 
     return (

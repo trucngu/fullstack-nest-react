@@ -1,7 +1,7 @@
 import { Button, Modal, Table } from 'antd'
 import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import api from '../../api'
+import api from '../../services'
 
 const Container = styled.div`
     display: flex;

@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useState } from 'react'
-import api from '../api'
+import api from '../services'
 import constants from '../constants'
 
 interface Auth {
@@ -21,9 +21,9 @@ export const AuthProvider: FC<Props> = ({
     const [isAuthenticated, setIsAuthenticated] = useState(false)
 
     const login = async (username: string, password: string) => {
-        const { accessToken } = await api.login(username, password)
-        if (accessToken) {
-            localStorage.setItem(constants.jwt, accessToken)
+        const result = await api.login(username, password)
+        if (result?.accessToken) {
+            localStorage.setItem(constants.jwt, result!.accessToken)
             setIsAuthenticated(true)
         }
     }

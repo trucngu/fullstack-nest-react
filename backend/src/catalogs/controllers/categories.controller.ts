@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { CategoryDto } from '../dto/category.dto'
 import { CategoryService } from '../services/category.service'
 
@@ -18,8 +18,8 @@ export class CategoriesController {
     }
 
     @Post()
-    create(@Body() categoryDto: CategoryDto) {
-        return this.categoryService.create(categoryDto)
+    create(@Body() dto: CategoryDto) {
+        return this.categoryService.create(dto)
     }
 
     @Put(':id')
@@ -30,5 +30,10 @@ export class CategoriesController {
     @Put(':id/deactivate')
     deactivate(@Param('id') id: number) {
         return this.categoryService.deactive(id)
+    }
+
+    @Delete(":id")
+    remove(@Param("id") id: number) {
+        return this.categoryService.remove(id)
     }
 }

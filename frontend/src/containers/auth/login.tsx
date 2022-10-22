@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Button, Input } from 'antd'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/use-auth'
-import api from '../../api'
+import api from '../../services'
 
 const Container = styled.div`
     width: 100vw;

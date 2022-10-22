@@ -1,44 +1,60 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { Entity, Repository } from 'typeorm'
 import { CategoryDto } from '../dto/category.dto'
-import { Category } from '../enties/category.entity'
+import { CategoryEntity } from '../enties/category.entity'
 
 @Injectable()
 export class CategoryService {
 
     constructor(
-        @InjectRepository(Category)
-        private cateogryRepository: Repository<Category>
+        @InjectRepository(CategoryEntity)
+        private categoryRepo: Repository<CategoryEntity>
     ) { }
 
     async findAll() {
-        return this.cateogryRepository.find()
+        return (await this.categoryRepo.find()).map(entity => {
+            return {
+                ...entity,
+                children: entity.children
+            }
+        })
     }
 
     async findOne(id: number) {
-        return this.cateogryRepository.findOneBy({
+        return this.categoryRepo.findOneBy({
             id
         })
     }
 
-    async create(dto: CategoryDto): Promise<Category> {
-        const result = await this.cateogryRepository.save({
+    async create(dto: CategoryDto): Promise<CategoryEntity> {
+        const parent = await this.categoryRepo.findOneBy({ id: dto.parentId })
+        if (!parent) {
+            throw new NotFoundException("Parent category does not exist")
+        }
+
+        const result = await this.categoryRepo.save({
+            parent,
             name: dto.name,
+            description: dto.description,
             isActive: true
         })
         return result
     }
 
     async update(id: number, dto: CategoryDto) {
-        await this.cateogryRepository.update(id, {
+        await this.categoryRepo.update(id, {
             name: dto.name
         })
     }
 
     async deactive(id: number) {
-        await this.cateogryRepository.update(id, {
+        await this.categoryRepo.update(id, {
             isActive: false
         })
+    }
+
+    async remove(id: number) {
+        await this.categoryRepo.delete(id)
     }
 }

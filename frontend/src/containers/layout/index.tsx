@@ -68,7 +68,7 @@ export const Layout = () => {
                 <SideNavMenu>
                     {routes.map((r, k) => {
                         return (
-                            <MenuItem path={r.path} title={r.title} icon={r.icon} routes={r.routes} />
+                            <MenuItem key={k} path={r.path} title={r.title} icon={r.icon} routes={r.routes} />
                         )
                     })}
                 </SideNavMenu>

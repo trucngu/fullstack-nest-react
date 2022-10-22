@@ -1,16 +1,11 @@
-import { createContext, FC, ReactNode, useEffect, useState } from 'react'
+import { createContext, FC, ReactNode, useState } from 'react'
 import api from '../api'
 import constants from '../constants'
-import jwtDecode from 'jwt-decode'
-
-interface User {
-    token: string
-    name: string
-}
 
 interface Auth {
-    user?: User
-    login: (username: string, password: string) => void
+    isAuthenticated: boolean
+    setIsAuthenticated: (isAuthenticated: boolean) => void
+    login: (username: string, password: string) => Promise<any>
     logout: () => void
 }
 
@@ -23,35 +18,24 @@ type Props = {
 export const AuthProvider: FC<Props> = ({
     children
 }) => {
-    const [user, setUser] = useState<User>(null!)
-
-    useEffect(() => {
-        (async () => {
-            const profile = await api.getProfile()
-            console.log(profile)
-        })()
-    }, [])
+    const [isAuthenticated, setIsAuthenticated] = useState(false)
 
     const login = async (username: string, password: string) => {
         const { accessToken } = await api.login(username, password)
         if (accessToken) {
             localStorage.setItem(constants.jwt, accessToken)
-            const profile = await api.getProfile()
-            console.log(profile)
-            setUser({
-                token: accessToken,
-                name: username
-            })
+            setIsAuthenticated(true)
         }
     }
 
     const logout = () => {
-        setUser(null!)
+        setIsAuthenticated(false)
     }
 
     return (
         <AuthContext.Provider value={{
-            user,
+            isAuthenticated,
+            setIsAuthenticated,
             login,
             logout
         }}>

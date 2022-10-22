@@ -11,15 +11,15 @@ import { RouteModel, routes } from './constants/routes'
 import { ProtectedRoute } from './components/protected-route'
 import { AuthProvider } from './contexts/auth-context'
 
-const render = (r: RouteModel) => {
+const render = (r: RouteModel, k: any) => {
   if (!r.routes || r.routes.length === 0) {
-    return <Route path={r.path} element={r.element} />
+    return <Route key={k} path={r.path} element={r.element} />
   }
 
   return (
     <Route path={r.path}>
       {r.routes.map((r, k) => {
-        return render(r)
+        return render(r, k)
       })}
     </Route>
   )
@@ -36,7 +36,7 @@ function App() {
             </ProtectedRoute>
           )}>
             {routes.map((r, k) => {
-              return render(r)
+              return render(r, k)
             })}
             <Route path='*' element={<PageNotFound />} />
           </Route>

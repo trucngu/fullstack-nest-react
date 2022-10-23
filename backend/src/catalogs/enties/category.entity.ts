@@ -1,9 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm'
+import { Entity, Column, PrimaryGeneratedColumn, TreeChildren, TreeParent, Tree } from 'typeorm'
 
 @Entity("categories")
+@Tree("nested-set")
 export class CategoryEntity {
     @PrimaryGeneratedColumn()
-    id: number
+    key: number
 
     @Column()
     name: string
@@ -11,16 +12,12 @@ export class CategoryEntity {
     @Column({ nullable: true })
     description: string
 
-    @Column({
-        default: true,
-        name: "is_active"
-    })
+    @Column({ nullable: false, default: true })
     isActive: boolean
 
-    @ManyToOne(() => CategoryEntity, cat => cat.children)
-    @JoinColumn({ name: "parent_id", referencedColumnName: "id" })
+    @TreeParent()
     parent: CategoryEntity
 
-    @OneToMany(() => CategoryEntity, cat => cat.parent)
+    @TreeChildren()
     children: CategoryEntity[]
 }

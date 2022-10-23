@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Entity, Repository } from 'typeorm'
+import { Repository, TreeRepository } from 'typeorm'
 import { CategoryDto } from '../dto/category.dto'
 import { CategoryEntity } from '../enties/category.entity'
 
@@ -9,31 +9,33 @@ export class CategoryService {
 
     constructor(
         @InjectRepository(CategoryEntity)
-        private categoryRepo: Repository<CategoryEntity>
+        private repo: Repository<CategoryEntity>,
+
+        @InjectRepository(CategoryEntity)
+        private treeRepo: TreeRepository<CategoryEntity>
     ) { }
 
-    async findAll() {
-        return (await this.categoryRepo.find()).map(entity => {
-            return {
-                ...entity,
-                children: entity.children
-            }
-        })
+    async get() {
+        return await this.repo.find()
     }
 
-    async findOne(id: number) {
-        return this.categoryRepo.findOneBy({
-            id
+    async getTree() {
+        return await this.treeRepo.findTrees()
+    }
+
+    async getById(id: number) {
+        return this.repo.findOneBy({
+            key: id
         })
     }
 
     async create(dto: CategoryDto): Promise<CategoryEntity> {
-        const parent = await this.categoryRepo.findOneBy({ id: dto.parentId })
+        const parent = await this.repo.findOneBy({ key: dto.parentId })
         if (!parent) {
             throw new NotFoundException("Parent category does not exist")
         }
 
-        const result = await this.categoryRepo.save({
+        const result = await this.repo.save({
             parent,
             name: dto.name,
             description: dto.description,
@@ -43,18 +45,18 @@ export class CategoryService {
     }
 
     async update(id: number, dto: CategoryDto) {
-        await this.categoryRepo.update(id, {
+        await this.repo.update(id, {
             name: dto.name
         })
     }
 
     async deactive(id: number) {
-        await this.categoryRepo.update(id, {
+        await this.repo.update(id, {
             isActive: false
         })
     }
 
     async remove(id: number) {
-        await this.categoryRepo.delete(id)
+        await this.repo.delete(id)
     }
 }

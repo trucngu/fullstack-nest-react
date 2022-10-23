@@ -3,7 +3,7 @@ import { ColumnsType } from 'antd/lib/table/interface'
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { Container } from '../../components/container'
-import categoryService, { Category } from '../../services/category-service'
+import categoryService, { CategoryModel } from '../../services/category-service'
 import styled from 'styled-components'
 
 const Action = styled.div`
@@ -19,7 +19,7 @@ const { confirm } = Modal
 export const Categories = () => {
     const [open, setOpen] = useState(false)
     const [form] = Form.useForm()
-    const [categories, setCategories] = useState<Category[]>()
+    const [categories, setCategories] = useState<CategoryModel[]>()
 
     useEffect(() => {
         loadAsync()
@@ -41,7 +41,7 @@ export const Categories = () => {
         setOpen(false)
     }
 
-    const handleDelete = (record: Category) => {
+    const handleDelete = (record: CategoryModel) => {
         confirm({
             title: `Do you want to delete ${record.name} ?`,
             content: 'Delete will remove the category and it is irreversible',
@@ -57,7 +57,7 @@ export const Categories = () => {
         })
     }
 
-    const columns: ColumnsType<Category> = [
+    const columns: ColumnsType<CategoryModel> = [
         {
             title: 'Name',
             dataIndex: 'name',
@@ -73,13 +73,13 @@ export const Categories = () => {
             dataIndex: 'isActive',
             width: '15%',
             key: 'isActive',
-            render: (isActive: boolean, record: Category) => (
+            render: (isActive: boolean, record: CategoryModel) => (
                 <Checkbox checked={isActive}></Checkbox>
             )
         },
         {
             width: "5rem",
-            render: (_: any, record: Category) => {
+            render: (_: any, record: CategoryModel) => {
                 return (
                     <Action>
                         <Button onClick={() => handleDelete(record)} type="primary" icon={<DeleteOutlined />} danger></Button>

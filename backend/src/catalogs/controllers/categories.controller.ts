@@ -9,12 +9,17 @@ export class CategoriesController {
 
     @Get()
     getCategories() {
-        return this.categoryService.findAll()
+        return this.categoryService.get()
+    }
+
+    @Get("tree")
+    getCategoriesTree() {
+        return this.categoryService.getTree()
     }
 
     @Get(":id")
     getById(@Param('id') id: number) {
-        return this.categoryService.findOne(id)
+        return this.categoryService.getById(id)
     }
 
     @Post()

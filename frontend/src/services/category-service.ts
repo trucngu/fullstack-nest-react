@@ -1,21 +1,19 @@
+import { ReactNode } from 'react'
 import apiClient from './http-service'
 
-export interface Category {
+export interface CategoryModel {
+    key: ReactNode
     id: number
     name: string
     description?: string
     isActive: boolean
     parent?: any
-    children?: Category[]
+    children?: CategoryModel[]
 }
 
 const categoryService = {
-    create: async (category: Category) => await apiClient.post('/categories', category),
-    get: async () => {
-        const categories = await apiClient.get<Category[]>('/categories')
-
-        return categories
-    },
+    create: async (category: CategoryModel) => await apiClient.post('/categories', category),
+    get: async () => await apiClient.get<CategoryModel[]>('/categories/tree'),
     delete: async (id: number) => await apiClient.remove(`/categories/${id}`)
 }
 

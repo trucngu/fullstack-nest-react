@@ -1,10 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, TreeChildren, TreeParent, Tree } from 'typeorm'
 
 @Entity("categories")
-@Tree("nested-set")
+@Tree("materialized-path")
 export class CategoryEntity {
     @PrimaryGeneratedColumn()
-    key: number
+    key?: number
 
     @Column()
     name: string
@@ -15,9 +15,9 @@ export class CategoryEntity {
     @Column({ nullable: false, default: true })
     isActive: boolean
 
-    @TreeParent()
-    parent: CategoryEntity
+    @TreeParent({ onDelete: 'CASCADE' })
+    parent?: CategoryEntity
 
-    @TreeChildren()
-    children: CategoryEntity[]
+    @TreeChildren({ cascade: true })
+    children?: CategoryEntity[]
 }

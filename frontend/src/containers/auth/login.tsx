@@ -45,18 +45,20 @@ export const Login = () => {
     const navigate = useNavigate()
     const from = location.state?.from?.pathname || '/dashboard'
 
-    /**
-     * keep user signed-in if refresh web browser
-     */
     useEffect(() => {
-        (async () => {
+        initAsync()
+    }, [])
+
+    const initAsync = async () => {
+        try {
             const profile = await api.getProfile()
             if (profile) {
                 auth.setIsAuthenticated(true)
                 navigate(from, { replace: true })
             }
-        })()
-    }, [])
+        }
+        catch (e) { }
+    }
 
     const handleSignIn = async () => {
         if (!credential) {
@@ -80,7 +82,6 @@ export const Login = () => {
                 <Input name='username' value={credential?.username} onChange={handleChange} placeholder='Username' />
                 <Input name='password' value={credential?.password} onChange={handleChange} placeholder='Password' type='password' />
                 <Button type="primary" onClick={handleSignIn} block>Login</Button>
-                <Button block>Register</Button>
             </Body>
         </Container>
     )

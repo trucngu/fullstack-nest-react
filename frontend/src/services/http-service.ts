@@ -23,10 +23,7 @@ async function get<T>(url: string) {
 
 async function post<T>(url: string, body?: any) {
     const response = await api.post(url, body)
-    if (response.status === 200) {
-        return response.data as T
-    }
-    return null
+    return response.data as T
 }
 
 async function put<T>(url: string, body: T) {

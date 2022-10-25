@@ -1,9 +1,7 @@
-import { ReactNode } from 'react'
 import apiClient from './http-service'
 
 export interface CategoryModel {
-    key: ReactNode
-    id: number
+    key: number
     name: string
     description?: string
     isActive: boolean
@@ -11,10 +9,25 @@ export interface CategoryModel {
     children?: CategoryModel[]
 }
 
+const get = async () => await apiClient.get<CategoryModel[]>('/categories/tree')
+
+const loadCategory = (result: CategoryModel[], categories: CategoryModel[]) => {
+    for (const cat of categories) {
+        result.push(cat)
+        if (cat.children?.length ?? 0 > 0) {
+            loadCategory(result, cat.children!)
+        }
+    }
+}
+
+const create = async (category: CategoryModel) => await apiClient.post('/categories', category)
+
+const remove = async (id: number) => await apiClient.remove(`/categories/${id}`)
+
 const categoryService = {
-    create: async (category: CategoryModel) => await apiClient.post('/categories', category),
-    get: async () => await apiClient.get<CategoryModel[]>('/categories/tree'),
-    delete: async (id: number) => await apiClient.remove(`/categories/${id}`)
+    create,
+    get,
+    remove
 }
 
 export default categoryService

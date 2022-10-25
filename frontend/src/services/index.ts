@@ -30,6 +30,7 @@ const login = async (username: string, password: string) =>
         password
     })
 
+
 const getProfile = async () => await apiClient.get<ProfileResponse>('/auth/profile')
 
 export default {

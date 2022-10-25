@@ -30,18 +30,28 @@ export class CategoryService {
     }
 
     async create(dto: CategoryDto): Promise<CategoryEntity> {
-        const parent = await this.repo.findOneBy({ key: dto.parentId })
-        if (!parent) {
-            throw new NotFoundException("Parent category does not exist")
-        }
 
-        const result = await this.repo.save({
-            parent,
-            name: dto.name,
-            description: dto.description,
-            isActive: true
-        })
-        return result
+        try {
+            const entity: CategoryEntity = {
+                name: dto.name,
+                description: dto.description,
+                isActive: true,
+            }
+
+            if (dto.parentId) {
+                const parent = await this.repo.findOneBy({ key: dto.parentId })
+                if (!parent) {
+                    throw new NotFoundException("Parent category does not exist")
+                }
+                entity.parent = parent
+            }
+
+            const result = await this.repo.save(entity)
+            return result
+        }
+        catch (e) {
+            console.log(e)
+        }
     }
 
     async update(id: number, dto: CategoryDto) {
@@ -57,6 +67,7 @@ export class CategoryService {
     }
 
     async remove(id: number) {
-        await this.repo.delete(id)
+        const entity = await this.getById(id)
+        await this.treeRepo.remove(entity)
     }
 }

@@ -1,5 +1,5 @@
 import { Button, Modal, Table, Form, Input, Checkbox, Select, notification, TableColumnsType, Badge, Tag } from 'antd'
-import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { Container } from '../../components/container'
 import categoryService, { CategoryModel } from '../../services/category-service'
@@ -8,7 +8,7 @@ import styled from 'styled-components'
 const Action = styled.div`
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
     justify-content: center;
 `
 
@@ -18,9 +18,10 @@ const { confirm } = Modal
 type SelectOption = { id: number, text: string }
 
 export const Categories = () => {
-    const [open, setOpen] = useState(false)
+    const [show, setShow] = useState(false)
     const [form] = Form.useForm()
     const [categories, setCategories] = useState<CategoryModel[]>([])
+    const [category, setCategory] = useState<CategoryModel>()
     const [categoryOptions, setCategoryOptions] = useState<SelectOption[]>([])
 
     useEffect(() => {
@@ -32,9 +33,8 @@ export const Categories = () => {
         setCategories(categories)
     }
 
-    const loadCategoryOptions = (categories: CategoryModel[]) => {
+    const loadCategoryOptions = () => {
         const options: SelectOption[] = []
-
         const flattenOptions = (source: CategoryModel[], output: SelectOption[]) => {
             for (const cat of source) {
                 output.push({ id: cat.key, text: cat.name })
@@ -51,13 +51,19 @@ export const Categories = () => {
 
     const handleSubmit = async () => {
         const model = form.getFieldsValue()
-        await categoryService.create(model)
+        if (!!category?.key) {
+            await categoryService.update(category!.key, model)
+        }
+        else {
+            await categoryService.create(model)
+        }
+
         notification.success({
-            message: 'Create category',
-            description: `Category ${model.name} created successfully.`,
+            message: 'Successfully',
+            description: `Category ${model.name} updated successfully.`,
         })
         await loadCategories()
-        setOpen(false)
+        setShow(false)
     }
 
     const handleDelete = (record: CategoryModel) => {
@@ -78,10 +84,29 @@ export const Categories = () => {
         })
     }
 
+    //TODO: refactor
+    const handleEdit = async (model: CategoryModel) => {
+        const result = await categoryService.getById(model.key)
+        if (result) {
+            const cat = result as CategoryModel
+            setCategory(cat)
+            showModal({ ...cat, parentId: cat.parent?.key })
+        }
+    }
+
     const handleOpenModal = () => {
-        form.resetFields()
-        loadCategoryOptions(categories)
-        setOpen(true)
+        showModal()
+    }
+
+    const showModal = (model?: CategoryModel) => {
+        loadCategoryOptions()
+        if (model) {
+            form.setFieldsValue(model)
+        }
+        else {
+            form.resetFields()
+        }
+        setShow(true)
     }
 
     const columns: TableColumnsType<CategoryModel> = [
@@ -98,19 +123,31 @@ export const Categories = () => {
             key: 'description',
         },
         {
+            title: 'Children',
+            render: (_: any, record: CategoryModel) => {
+                return (
+                    <span>
+                        {record.children && record.children.map(x => {
+                            return <Tag color="pink" key={x.key}>{x.name}</Tag>
+                        })}
+                    </span>
+                )
+            }
+        },
+        {
             title: 'Active',
             dataIndex: 'isActive',
-            width: '15%',
             key: 'isActive',
             render: (isActive: boolean, record: CategoryModel) => (
-                <Tag color={isActive ? 'green' : 'red'}>{isActive ? 'Active' : 'Inactive'}</Tag>
+                <Tag color={isActive ? 'green' : 'pink'}>{isActive ? 'Active' : 'Inactive'}</Tag>
             )
         },
         {
-            width: "5rem",
+            width: "150px",
             render: (_: any, record: CategoryModel) => {
                 return (
                     <Action>
+                        <Button onClick={() => handleEdit(record)} type="ghost" icon={<EditOutlined />}></Button>
                         <Button onClick={() => handleDelete(record)} type="primary" icon={<DeleteOutlined />} danger></Button>
                     </Action>
                 )
@@ -129,7 +166,7 @@ export const Categories = () => {
 
             <Table columns={columns} dataSource={categories} bordered pagination={{ pageSize: 5 }} />
 
-            <Modal title="Create Category" open={open} onOk={handleSubmit} onCancel={() => setOpen(false)}>
+            <Modal title="Create Category" open={show} onOk={handleSubmit} onCancel={() => setShow(false)}>
                 <Form layout="vertical" form={form}>
                     <Form.Item name="name" label="Name" rules={[{ required: true }]}>
                         <Input />

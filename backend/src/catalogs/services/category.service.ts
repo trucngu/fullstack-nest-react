@@ -24,13 +24,11 @@ export class CategoryService {
     }
 
     async getById(id: number) {
-        return this.repo.findOneBy({
-            key: id
-        })
+        const category = await this.treeRepo.findOneBy({ key: id })
+        return await this.treeRepo.findAncestorsTree(category)
     }
 
     async create(dto: CategoryDto): Promise<CategoryEntity> {
-
         try {
             const entity: CategoryEntity = {
                 name: dto.name,
@@ -55,8 +53,12 @@ export class CategoryService {
     }
 
     async update(id: number, dto: CategoryDto) {
+        const parent = dto.parentId ? await this.getById(dto.parentId) : null
         await this.repo.update(id, {
-            name: dto.name
+            name: dto.name,
+            description: dto.description,
+            parent,
+            isActive: dto.isActive
         })
     }
 

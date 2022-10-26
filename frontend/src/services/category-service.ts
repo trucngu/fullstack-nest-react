@@ -6,28 +6,26 @@ export interface CategoryModel {
     description?: string
     isActive: boolean
     parent?: any
+    parentId?: number,
     children?: CategoryModel[]
 }
 
 const get = async () => await apiClient.get<CategoryModel[]>('/categories/tree')
 
-const loadCategory = (result: CategoryModel[], categories: CategoryModel[]) => {
-    for (const cat of categories) {
-        result.push(cat)
-        if (cat.children?.length ?? 0 > 0) {
-            loadCategory(result, cat.children!)
-        }
-    }
-}
+const getById = async (id: number) => await apiClient.get<CategoryModel>(`/categories/${id}`)
 
 const create = async (category: CategoryModel) => await apiClient.post('/categories', category)
 
 const remove = async (id: number) => await apiClient.remove(`/categories/${id}`)
 
+const update = async (id: number, category: CategoryModel) => await apiClient.put(`/categories/${id}`, category)
+
 const categoryService = {
     create,
     get,
-    remove
+    getById,
+    remove,
+    update
 }
 
 export default categoryService

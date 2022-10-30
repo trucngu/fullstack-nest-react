@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { CategoriesController } from './controllers/categories.controller'
-import { ProductsController } from './controllers/products.controller'
 import { CategoryEntity } from './enties/category.entity'
 import { CategoryService } from './services/category.service'
 
@@ -15,7 +14,6 @@ import { CategoryService } from './services/category.service'
     exports: [
     ],
     controllers: [
-        ProductsController,
         CategoriesController
     ]
 })

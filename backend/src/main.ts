@@ -6,7 +6,6 @@ import { AppModule } from './app.module'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true })
   app.use(helmet())
-  // app.setGlobalPrefix('api')
 
   const config = new DocumentBuilder()
     .setTitle('Spacesales')

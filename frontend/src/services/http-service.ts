@@ -1,16 +1,7 @@
 import axios from 'axios'
-import constants from '../constants'
 
 export const api = axios.create({
     baseURL: 'http://localhost:3000'
-})
-
-api.interceptors.request.use(config => {
-    const jwt = localStorage.getItem(constants.jwt)
-    config!.headers!['Authorization'] = `Bearer ${jwt}`
-    return config
-}, error => {
-    return Promise.reject(error)
 })
 
 async function get<T>(url: string) {

@@ -64,7 +64,7 @@ export const Layout = () => {
     return (
         <LayoutWrapper>
             <SideNav>
-                <Brand>SpaceSales</Brand>
+                <Brand>[Corp Name]</Brand>
                 <SideNavMenu>
                     {routes.map((r, k) => {
                         return (

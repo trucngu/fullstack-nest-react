@@ -4,12 +4,9 @@ import {
   Routes,
   Route,
 } from "react-router-dom"
-import { Login } from './containers/auth/login'
 import { Layout } from './containers/layout'
 import { PageNotFound } from './containers/error/page-not-found'
 import { RouteModel, routes } from './constants/routes'
-import { ProtectedRoute } from './components/protected-route'
-import { AuthProvider } from './contexts/auth-context'
 
 const render = (r: RouteModel, k: any) => {
   if (!r.routes || r.routes.length === 0) {
@@ -28,21 +25,14 @@ const render = (r: RouteModel, k: any) => {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={(
-            <ProtectedRoute>
-              <Layout />
-            </ProtectedRoute>
-          )}>
-            {routes.map((r, k) => {
-              return render(r, k)
-            })}
-            <Route path='*' element={<PageNotFound />} />
-          </Route>
-          <Route path='login' element={<Login />} />
-        </Routes>
-      </AuthProvider>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          {routes.map((r, k) => {
+            return render(r, k)
+          })}
+          <Route path='*' element={<PageNotFound />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   )
 }
